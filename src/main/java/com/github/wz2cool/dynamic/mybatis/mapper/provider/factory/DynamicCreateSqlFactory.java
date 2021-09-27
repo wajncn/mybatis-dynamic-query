@@ -1,6 +1,8 @@
 package com.github.wz2cool.dynamic.mybatis.mapper.provider.factory;
 
 import com.github.wz2cool.dynamic.helper.CommonsHelper;
+import com.github.wz2cool.dynamic.mybatis.mapper.constant.MapperConstants;
+import com.github.wz2cool.dynamic.mybatis.mapper.helper.DynamicQuerySqlHelper;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -91,6 +93,28 @@ public final class DynamicCreateSqlFactory {
                 .map(a -> CommonsHelper.format("#{%s}", a))
                 .collect(Collectors.joining(",")));
         sqlBuilder.append(")");
+        sqlBuilder.append("</script>");
+        return sqlBuilder.toString();
+    }
+
+
+    /**
+     * @return sql
+     */
+    public String getDynamicSql() {
+        Class<?> entityClass = providerTable.getEntityClass();
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("<script>");
+        //add bind
+        sqlBuilder.append(DynamicQuerySqlHelper.getBindFilterParams(true));
+        sqlBuilder.append("select");
+        sqlBuilder.append(String.format("<if test=\"%s.%s\">distinct</if>",
+                MapperConstants.DYNAMIC_QUERY_PARAMS, MapperConstants.DISTINCT));
+        //支持查询指定列
+        sqlBuilder.append(DynamicQuerySqlHelper.getSelectColumnsClause());
+        sqlBuilder.append(" from " + providerTable.getTableName() + " ");
+        sqlBuilder.append(DynamicQuerySqlHelper.getWhereClause(entityClass));
+        sqlBuilder.append(DynamicQuerySqlHelper.getSortClause());
         sqlBuilder.append("</script>");
         return sqlBuilder.toString();
     }
