@@ -99,6 +99,44 @@ public final class DynamicCreateSqlFactory {
 
 
     /**
+     * @param updateSelective updateSelective
+     * @return sql
+     */
+    public String getUpdateByPrimaryKeySql(boolean updateSelective) {
+        if (providerTable.getPrimaryKey() == null) {
+            throw new IllegalArgumentException(CommonsHelper.format("该类[%s]没有发现主键", providerTable.getTableName()));
+        }
+        if (updateSelective) {
+            StringBuilder sqlBuilder = new StringBuilder();
+            sqlBuilder.append("<script>");
+            sqlBuilder.append(CommonsHelper.format("update %s ", providerTable.getTableName()));
+            sqlBuilder.append("<set>");
+            sqlBuilder.append(Arrays.stream(providerTable.getColumns())
+                    .filter(a -> !a.isPrimaryKey())
+                    .map(a -> CommonsHelper.format("<if test=\"%s != null\">%s = #{%s},</if>",
+                            a.getJavaColumn(), a.getDbColumn(), a.getJavaColumn()))
+                    .collect(Collectors.joining()));
+            sqlBuilder.append("</set>");
+            sqlBuilder.append(CommonsHelper.format(" where %s = #{%s}",
+                    providerTable.getPrimaryKey().getDbColumn(), providerTable.getPrimaryKey().getJavaColumn()));
+            sqlBuilder.append("</script>");
+            return sqlBuilder.toString();
+        }
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("<script>");
+        sqlBuilder.append(CommonsHelper.format("update %s set ", providerTable.getTableName()));
+        sqlBuilder.append(Arrays.stream(providerTable.getColumns())
+                .filter(a -> !a.isPrimaryKey())
+                .map(a -> CommonsHelper.format("%s = #{%s}", a.getDbColumn(), a.getJavaColumn()))
+                .collect(Collectors.joining(",")));
+        sqlBuilder.append(CommonsHelper.format(" where %s = #{%s}",
+                providerTable.getPrimaryKey().getDbColumn(), providerTable.getPrimaryKey().getJavaColumn()));
+        sqlBuilder.append("</script>");
+        return sqlBuilder.toString();
+    }
+
+
+    /**
      * @return sql
      */
     public String getDynamicSql() {
