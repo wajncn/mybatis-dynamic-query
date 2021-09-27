@@ -5,6 +5,7 @@ import com.github.wz2cool.dynamic.mybatis.mapper.constant.MapperConstants;
 import com.github.wz2cool.dynamic.mybatis.mapper.helper.DynamicQuerySqlHelper;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -97,7 +98,6 @@ public final class DynamicCreateSqlFactory {
         return sqlBuilder.toString();
     }
 
-
     /**
      * @param updateSelective updateSelective
      * @return sql
@@ -113,8 +113,11 @@ public final class DynamicCreateSqlFactory {
             sqlBuilder.append("<set>");
             sqlBuilder.append(Arrays.stream(providerTable.getColumns())
                     .filter(a -> !a.isPrimaryKey())
-                    .map(a -> CommonsHelper.format("<if test=\"%s != null\">%s = #{%s},</if>",
-                            a.getJavaColumn(), a.getDbColumn(), a.getJavaColumn()))
+                    .map(a -> CommonsHelper.format("<if test=\"%s != null %s\">%s = #{%s},</if>",
+                            a.getJavaColumn(),
+                            Objects.equals(a.getColumnType().getSimpleName(),
+                                    "String") ? CommonsHelper.format("and %s != ''", a.getJavaColumn()) : "",
+                            a.getDbColumn(), a.getJavaColumn()))
                     .collect(Collectors.joining()));
             sqlBuilder.append("</set>");
             sqlBuilder.append(CommonsHelper.format(" where %s = #{%s}",
