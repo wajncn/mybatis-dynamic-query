@@ -2,6 +2,9 @@ package com.github.wz2cool.dynamic.mybatis.mapper.provider.factory;
 
 import com.github.wz2cool.dynamic.helper.CommonsHelper;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * 通过本类可以获取动态sql
  *
@@ -44,6 +47,50 @@ public final class DynamicCreateSqlFactory {
                     column.getJavaColumn(), column.getDbColumn(), column.getJavaColumn()));
         }
         sqlBuilder.append("</where>");
+        sqlBuilder.append("</script>");
+        return sqlBuilder.toString();
+    }
+
+
+    /**
+     * @param insertSelective insertSelective
+     * @return sql
+     */
+    public String getInsertSql(boolean insertSelective) {
+        if (insertSelective) {
+            StringBuilder sqlBuilder = new StringBuilder();
+            sqlBuilder.append("<script>");
+            sqlBuilder.append("insert into ");
+            sqlBuilder.append(providerTable.getTableName());
+            sqlBuilder.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
+            for (ProviderColumn column : providerTable.getColumns()) {
+                sqlBuilder.append(CommonsHelper.format("<if test=\"%s != null\">%s,</if>",
+                        column.getJavaColumn(), column.getDbColumn()));
+            }
+            sqlBuilder.append("</trim>");
+
+            sqlBuilder.append("<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\">");
+            for (ProviderColumn column : providerTable.getColumns()) {
+                sqlBuilder.append(CommonsHelper.format("<if test=\"%s != null\">#{%s},</if>",
+                        column.getJavaColumn(), column.getJavaColumn()));
+            }
+            sqlBuilder.append("</trim>");
+            sqlBuilder.append("</script>");
+            return sqlBuilder.toString();
+        }
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("<script>");
+        sqlBuilder.append("insert into ");
+        sqlBuilder.append(providerTable.getTableName());
+        sqlBuilder.append("(");
+        sqlBuilder.append(Arrays.stream(providerTable.getColumns())
+                .map(ProviderColumn::getDbColumn).collect(Collectors.joining(",")));
+        sqlBuilder.append(") values (");
+        sqlBuilder.append(Arrays.stream(providerTable.getColumns())
+                .map(ProviderColumn::getJavaColumn)
+                .map(a -> CommonsHelper.format("#{%s}", a))
+                .collect(Collectors.joining(",")));
+        sqlBuilder.append(")");
         sqlBuilder.append("</script>");
         return sqlBuilder.toString();
     }
