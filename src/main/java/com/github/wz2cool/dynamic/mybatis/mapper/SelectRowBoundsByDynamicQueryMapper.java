@@ -30,6 +30,7 @@ public interface SelectRowBoundsByDynamicQueryMapper<T> {
             @Param(MapperConstants.DYNAMIC_QUERY) DynamicQuery<T> dynamicQuery,
             RowBounds rowBounds);
 
+
     /**
      * select first record by dynamic query
      *
