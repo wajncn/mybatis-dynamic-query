@@ -2,17 +2,14 @@ package com.github.wz2cool.dynamic.mybatis.mapper.provider;
 
 import com.github.wz2cool.dynamic.DynamicQuery;
 import com.github.wz2cool.dynamic.UpdateQuery;
-import com.github.wz2cool.dynamic.helper.CommonsHelper;
 import com.github.wz2cool.dynamic.mybatis.QueryHelper;
 import com.github.wz2cool.dynamic.mybatis.mapper.constant.MapperConstants;
 import com.github.wz2cool.dynamic.mybatis.mapper.helper.DynamicQuerySqlHelper;
 import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.DynamicCreateSqlFactory;
-import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.ProviderColumn;
 import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.ProviderFactory;
 import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.ProviderTable;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.jdbc.SQL;
-import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -115,7 +112,7 @@ public class DynamicDeleteProvider {
         if (DYNAMIC_QUERY_CACHE.containsKey(providerTable.getKey())) {
             return DYNAMIC_QUERY_CACHE.get(providerTable.getKey());
         }
-        final String sql = DynamicCreateSqlFactory.getSqlFactory(providerTable).dynamicDelete();
+        final String sql = DynamicCreateSqlFactory.getSqlFactory(providerTable).getDynamicDelete();
         DYNAMIC_QUERY_CACHE.put(providerTable.getKey(), sql);
         return sql;
     }

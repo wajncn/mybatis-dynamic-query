@@ -161,7 +161,7 @@ public final class DynamicCreateSqlFactory {
     }
 
 
-    public String dynamicDelete() {
+    public String getDynamicDelete() {
         Class<?> entityClass = providerTable.getEntityClass();
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("<script>");
