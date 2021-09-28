@@ -41,7 +41,7 @@ public class DynamicQueryProvider {
         if (DYNAMIC_QUERY_CACHE.containsKey(providerTable.getKey())) {
             return DYNAMIC_QUERY_CACHE.get(providerTable.getKey());
         }
-        final String sql = DynamicCreateSqlFactory.getSqlFactory(providerTable).getDynamicSql();
+        final String sql = DynamicCreateSqlFactory.getSqlFactory(providerTable).getDynamicQuery();
         DYNAMIC_QUERY_CACHE.put(providerTable.getKey(), sql);
         return sql;
     }

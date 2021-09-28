@@ -12,6 +12,7 @@ import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.ProviderFactor
 import com.github.wz2cool.dynamic.mybatis.mapper.provider.factory.ProviderTable;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,22 +109,16 @@ public class DynamicDeleteProvider {
 //        return sql.toString();
 //    }
 //
-//    public String deleteByDynamicQuery(ProviderContext ms) {
-//        Class<?> entityClass = getEntityClass(ms);
-//        StringBuilder sql = new StringBuilder();
-//        sql.append(DynamicQuerySqlHelper.getBindFilterParams(ms.getConfiguration().isMapUnderscoreToCamelCase()));
-//        if (SqlHelper.hasLogicDeleteColumn(entityClass)) {
-//            sql.append(SqlHelper.updateTable(entityClass, tableName(entityClass)));
-//            sql.append("<set>");
-//            sql.append(SqlHelper.logicDeleteColumnEqualsValue(entityClass, true));
-//            sql.append("</set>");
-//            MetaObjectUtil.forObject(ms).setValue("sqlCommandType", SqlCommandType.UPDATE);
-//        } else {
-//            sql.append(SqlHelper.deleteFromTable(entityClass, tableName(entityClass)));
-//        }
-//        sql.append(DynamicQuerySqlHelper.getWhereClause(entityClass));
-//        return sql.toString();
-//    }
+
+    public String deleteByDynamicQuery(ProviderContext providerContext) {
+        ProviderTable providerTable = ProviderFactory.create(providerContext);
+        if (DYNAMIC_QUERY_CACHE.containsKey(providerTable.getKey())) {
+            return DYNAMIC_QUERY_CACHE.get(providerTable.getKey());
+        }
+        final String sql = DynamicCreateSqlFactory.getSqlFactory(providerTable).dynamicDelete();
+        DYNAMIC_QUERY_CACHE.put(providerTable.getKey(), sql);
+        return sql;
+    }
 //
 
     public String selectByDynamicQuery(ProviderContext providerContext) {
