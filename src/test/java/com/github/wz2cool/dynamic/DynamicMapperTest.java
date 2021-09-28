@@ -56,21 +56,21 @@ public class DynamicMapperTest {
     @Test
     public void insert2() {
         User user = new User();
-        user.setId(11111);
+        user.setId(11111111);
         user.setUserName("aaa");
         System.out.println(userDao.insert(user));
-        System.out.println(userDao.selectByPrimaryKey(11111));
+        System.out.println(userDao.selectByPrimaryKey(11111111));
 
         user.setUserName("bbbbb");
         userDao.updateByPrimaryKey(user);
-        System.out.println(userDao.selectByPrimaryKey(11111));
+        System.out.println(userDao.selectByPrimaryKey(11111111));
 
         user = new User();
-        user.setId(11111);
+        user.setId(11111111);
         user.setUserName("11");
         user.setPassword("");
         userDao.updateByPrimaryKeySelective(user);
-        System.out.println(userDao.selectByPrimaryKey(11111));
+        System.out.println(userDao.selectByPrimaryKey(11111111));
     }
 
 
@@ -101,10 +101,10 @@ public class DynamicMapperTest {
     @Test
     public void insertSelective() {
         User user = new User();
-        user.setId(11111);
+        user.setId(1188111);
         user.setUserName("aaa");
         System.out.println(userDao.insertSelective(user));
-        System.out.println(userDao.selectByPrimaryKey(11111));
+        System.out.println(userDao.selectByPrimaryKey(1188111));
     }
 
 

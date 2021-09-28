@@ -174,4 +174,15 @@ public final class DynamicCreateSqlFactory {
     }
 
 
+    public String getDynamicCount() {
+        Class<?> entityClass = providerTable.getEntityClass();
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("<script>");
+        //add bind
+        sqlBuilder.append(DynamicQuerySqlHelper.getBindFilterParams(true));
+        sqlBuilder.append("select COUNT(*) from " + providerTable.getTableName() + " ");
+        sqlBuilder.append(DynamicQuerySqlHelper.getWhereClause(entityClass));
+        sqlBuilder.append("</script>");
+        return sqlBuilder.toString();
+    }
 }
