@@ -9,6 +9,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 提供基本的查询
+ *
+ * @param <T>
+ * @author wangjin
+ */
 public interface SelectMapper<T> {
 
     /**
@@ -42,7 +48,6 @@ public interface SelectMapper<T> {
     @SelectProvider(type = DynamicQueryProvider.class, method = "select")
     Optional<T> selectOneForOptional(T entity);
 
-
     /**
      * 根据主键字段进行查询，方法参数必须包含完整的主键属性{@link javax.persistence.Id}
      *
@@ -53,7 +58,6 @@ public interface SelectMapper<T> {
     @SelectProvider(type = DynamicQueryProvider.class, method = "selectByPrimaryKey")
     T selectByPrimaryKey(Serializable key);
 
-
     /**
      * 根据主键字段进行查询，方法参数必须包含完整的主键属性{@link javax.persistence.Id}
      *
@@ -62,7 +66,6 @@ public interface SelectMapper<T> {
      */
     @SelectProvider(type = DynamicQueryProvider.class, method = "selectByPrimaryKey")
     Optional<T> selectByPrimaryKeyForOptional(Serializable key);
-
 
     /**
      * 查询所有数据
