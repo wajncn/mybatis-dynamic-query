@@ -25,7 +25,7 @@ public interface SelectMapper<T> {
      * 根据实体中的属性进行查询，只能有一个返回值，有多个结果是抛出异常，查询条件使用等号
      * 推荐使用{@link DynamicQueryMapper#selectFirstByDynamicQuery(DynamicQuery)}
      *
-     * @param entity entity 实体对象
+     * @param entity 实体对象
      * @return T
      */
     @Nullable
@@ -36,7 +36,7 @@ public interface SelectMapper<T> {
      * 根据实体中的属性进行查询，只能有一个返回值，有多个结果是抛出异常，查询条件使用等号
      * 推荐使用{@link SelectRowBoundsByDynamicQueryMapper#selectFirstByDynamicQuery(DynamicQuery)}
      *
-     * @param entity entity 实体对象
+     * @param entity 实体对象
      * @return Optional<T>
      */
     @SelectProvider(type = DynamicQueryProvider.class, method = "select")

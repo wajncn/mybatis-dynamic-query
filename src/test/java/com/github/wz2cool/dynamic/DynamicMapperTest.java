@@ -116,7 +116,7 @@ public class DynamicMapperTest {
     public void selectOne() {
         User user = new User();
         user.setId(1);
-        System.out.println(userDao.selectOne(user));
+        System.out.println(userDao.selectOne(user).getId());
     }
 
     @Test
